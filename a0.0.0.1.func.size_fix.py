@@ -98,10 +98,14 @@ class Ui_MainWindow(QMainWindow):
         namespace=self.baseSetting_DatapackNameInput.text()
         version=self.baseSetting_DatapackVersionSelected.currentIndex()+3
         description=self.baseSetting_DatapackDescriptionInput.toPlainText()
-        if os.path.exists(datapackDir+"/pack.mcmeta"):
+        if os.path.exists(datapackDir+"/data/"):
             pass
         else:
-            os.mkdir(datapackDir+"/"+namespace)
+            os.mkdir(datapackDir+"/data/")
+        if os.path.exists(datapackDir+"/data/"+namespace):
+            pass
+        else:
+            os.mkdir(datapackDir+"/data/"+namespace)
         with open(datapackDir+"/pack.mcmeta",encoding="utf-8",mode="w+") as f:
             packMcmeta={
                 "pack":{
