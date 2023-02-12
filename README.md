@@ -13,9 +13,13 @@ The generator is pack by <a herf="https://github.com/pyinstaller/pyinstaller">py
 
 ## 使用 How to use
 
-目前还未发布发行版，如您想使用，请自行下载**index.版本号.py**文件并安装pyqt5，之后运行本工具。
+在Releases中找到你想要的版本并找到下载地址（有些版本因故文件没有上传在Github上），下载后双击运行即可。<br>
 
-There is no release yet. If you want to use it, please download the **index.[version number].py** file and install pyqt5 then run this tool
+Find the release you want in Releases and the download address (some versions are not uploaded on Github) , then double-click to run it.<br>
+
+如果你想抢先体验，请在仓库文件夹“All_Verisons”中找到你想要的版本的文件，下载下来并配置好pyqt5环境，双击运行。<br>
+
+If you want to use unreleased version, please find the version you want in the repository folder“All_Versions”, download it, configure the pyqt5 environment, and double-click to run it.
 
 ### PyQt5的安装 Installation of PyQt5
 
