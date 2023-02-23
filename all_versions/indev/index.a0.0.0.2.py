@@ -237,6 +237,67 @@ class Ui_MainWindow(QMainWindow):
         MainWindow.setTabOrder(self.baseSetting_DatapackDescriptionInput, self.baseSetting_SaveButton)
         MainWindow.setTabOrder(self.baseSetting_SaveButton, self.baseSetting_FormatCodeWikiLinkButton)
         self.datapack_namespace=""
+    def recipes_crafting_gen(self):
+        #print(self.recipes_TypeSelected.currentIndex(),'currentIndex:TypeSelected')
+        if self.recipes_TypeSelected.currentIndex() == 0:
+            inList1=[self.recipes_crafting_shaped_In1.text(),self.recipes_crafting_shaped_In2.text(),self.recipes_crafting_shaped_In3.text(),
+                    self.recipes_crafting_shaped_In4.text(),self.recipes_crafting_shaped_In5.text(),self.recipes_crafting_shaped_In6.text(),
+                    self.recipes_crafting_shaped_In7.text(),self.recipes_crafting_shaped_In8.text(),self.recipes_crafting_shaped_In9.text()
+            ]
+            inDict={}
+            type="minecraft:crafting_shaped"
+            inSet=set([x for x in inList1 if inList1.count(x) > 1])
+            keysL=['X','#','*','@','%','D',"&",'O','K']
+            for i in inSet:
+                if i!='':
+                    inDict[i]=keysL[0]
+                    keysL.pop(0)
+            for i in inList1:
+                if i!='':
+                    inList1[inList1.index(i)]=inDict[i]
+                else:
+                    inList1[inList1.index(i)]=' '
+            print(inList1)
+            inList=[]
+            for i in range(0,7,3):
+                inList.append(inList1[i]+inList1[i+1]+inList1[i+2])
+            result={
+                "type":type,
+                "key":{},
+                "pattern":inList,
+                "result":{
+                    "item":self.recipes_crafting_shaped_Out.text()
+                },
+                "count":int(self.recipes_crafting_shaped_OutNumber.value())
+            }
+            for i in inDict:
+                result["key"][inDict[i]]={
+                    "item":i
+                }
+            if datapackDir == "None" and datapackDir:
+                QMessageBox.critical(None,"错误", "您没有选择数据包目录，请选择数据包目录！")
+                self.newDatapackFunc()
+                if os.path.exists(datapackDir+"/data/") == False:
+                    os.mkdir(datapackDir+"/data/")
+                if os.path.exists(datapackDir+'/pack.mcmeta'):
+                    with open(datapackDir+"/pack.mcmeta","w",encoding="utf-8") as f:
+                        packMcmeta={
+                        "pack":{
+                            "pack_format":12,
+                            "description":"数据包简介\ncreate by DatapackGenerator"
+                        }
+                    }
+                        f.write(json.dumps(packMcmeta,ensure_ascii=False))
+                    if len(os.listdir(datapackDir+"/data/")) and datapackDir!='' == 0:
+                        os.mkdir(datapackDir+"/data/"+easygui.enterbox("输入命名空间名称",title="新建命名空间"))
+                        self.datapack_namespace=os.listdir(datapackDir+"/data/")[0]
+            namespace=os.listdir(datapackDir+"/data/")
+            if len(namespace)>=2:
+                self.datapack_namespace=easygui.choicebox("选择一个命名空间","多个命名空间",namespace)
+            else:
+                self.datapack_namespace=namespace=namespace[0]
+            with open(datapackDir+"/data/"+namespace+"/recipes/"+self.recipes_fileNameInput.text()+".json",mode="w",encoding="utf-8") as f:
+                f.write(json.dumps(result))
 
     def recipes_ListViewClicked(self,index):
         global datapackDir,listItem
@@ -253,7 +314,29 @@ class Ui_MainWindow(QMainWindow):
         self.recipes_TypeSelected.currentIndex=recipeType
         self.recipes_fileNameInput.setText(listItem[index.row()].split(".")[0])
         self.recipes_TypeSelected.setCurrentIndex(tabDict[recipeType])
-        QMessageBox.information(None,"选择","你选择了第" + str(index.row())+"个 \n 类型：" + recipeType)
+        #QMessageBox.information(None,"选择","你选择了第" + str(index.row())+"个 \n 类型：" + recipeType)
+        if recipeType=="crafting_shaped":
+            recipesTable=[]
+            for i in result["pattern"]:
+                for j in i:
+                    recipesTable.append(j)
+            print(recipesTable)
+            result['key'][' ']={
+                'item':''
+            }
+            for i in recipesTable:
+                print(i,result['key'][i]["item"])
+                recipesTable[recipesTable.index(i)]=result['key'][i]["item"]
+            n=0
+            for i in recipesTable:
+                exec(f"self.recipes_crafting_shaped_In{n+1}.setText('{i}')")
+                n+=1
+            self.recipes_crafting_shaped_Out.setText(result["result"]['item'])
+            if "count" in result:
+                self.recipes_crafting_shaped_OutNumber.setValue(result["count"])
+            else:
+                self.recipes_crafting_shaped_OutNumber.setValue(1)
+            #print(result)
     def recipes_reflashListFunc(self):
         global datapackDir,listItem
         if datapackDir == "None" and datapackDir:
@@ -413,6 +496,7 @@ class Ui_MainWindow(QMainWindow):
         self.baseSetting_SaveButton.clicked.connect(self.saveBaseSetting)
         self.recipes_reflashList.clicked.connect(self.recipes_reflashListFunc)
         self.recipes_ListView.clicked.connect(self.recipes_ListViewClicked)
+        self.recipes_save.clicked.connect(self.recipes_crafting_gen)
 
         #主题
         self.title.setProperty('class','title')
