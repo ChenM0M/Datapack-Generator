@@ -274,23 +274,23 @@ class Ui_MainWindow(QMainWindow):
                 result["key"][inDict[i]]={
                     "item":i
                 }
-            if datapackDir == "None" and datapackDir:
-                QMessageBox.critical(None,"错误", "您没有选择数据包目录，请选择数据包目录！")
-                self.newDatapackFunc()
-                if os.path.exists(datapackDir+"/data/") == False:
-                    os.mkdir(datapackDir+"/data/")
-                if os.path.exists(datapackDir+'/pack.mcmeta'):
-                    with open(datapackDir+"/pack.mcmeta","w",encoding="utf-8") as f:
-                        packMcmeta={
-                        "pack":{
-                            "pack_format":12,
-                            "description":"数据包简介\ncreate by DatapackGenerator"
-                        }
-                    }
-                        f.write(json.dumps(packMcmeta,ensure_ascii=False))
-                    if len(os.listdir(datapackDir+"/data/")) and datapackDir!='' == 0:
-                        os.mkdir(datapackDir+"/data/"+easygui.enterbox("输入命名空间名称",title="新建命名空间"))
-                        self.datapack_namespace=os.listdir(datapackDir+"/data/")[0]
+            # if datapackDir == "None" and datapackDir:
+            #     QMessageBox.critical(None,"错误", "您没有选择数据包目录，请选择数据包目录！")
+            #     self.newDatapackFunc()
+            #     if os.path.exists(datapackDir+"/data/") == False:
+            #         os.mkdir(datapackDir+"/data/")
+            #     if os.path.exists(datapackDir+'/pack.mcmeta'):
+            #         with open(datapackDir+"/pack.mcmeta","w",encoding="utf-8") as f:
+            #             packMcmeta={
+            #             "pack":{
+            #                 "pack_format":12,
+            #                 "description":"数据包简介\ncreate by DatapackGenerator"
+            #             }
+            #         }
+            #             f.write(json.dumps(packMcmeta,ensure_ascii=False))
+            #         if len(os.listdir(datapackDir+"/data/")) and datapackDir!='' == 0:
+            #             os.mkdir(datapackDir+"/data/"+easygui.enterbox("输入命名空间名称",title="新建命名空间"))
+            #             self.datapack_namespace=os.listdir(datapackDir+"/data/")[0]
             namespace=os.listdir(datapackDir+"/data/")
             if len(namespace)>=2:
                 self.datapack_namespace=easygui.choicebox("选择一个命名空间","多个命名空间",namespace)
@@ -339,29 +339,29 @@ class Ui_MainWindow(QMainWindow):
             #print(result)
     def recipes_reflashListFunc(self):
         global datapackDir,listItem
-        if datapackDir == "None" and datapackDir:
-            QMessageBox.critical(None,"错误", "您没有选择数据包目录，请选择数据包目录！")
-            self.newDatapackFunc()
-            if os.path.exists(datapackDir+"/data/") == False:
-                os.mkdir(datapackDir+"/data/")
-            if os.path.exists(datapackDir+'/pack.mcmeta'):
-                with open(datapackDir+"/pack.mcmeta","w",encoding="utf-8") as f:
-                    packMcmeta={
-                    "pack":{
-                        "pack_format":12,
-                        "description":"数据包简介\ncreate by DatapackGenerator"
-                    }
-                }
-                    f.write(json.dumps(packMcmeta,ensure_ascii=False))
-                if len(os.listdir(datapackDir+"/data/")) == 0:
-                    os.mkdir(datapackDir+"/data/"+easygui.enterbox("输入命名空间名称",title="新建命名空间"))
-            with open(datapackDir+"/pack.mcmeta","r",encoding="utf-8") as f:
-                resultstr=f.read()
-            result=json.loads(resultstr)
-            print(result)
-            self.baseSetting_DatapackDescriptionInput.setText(result["pack"]["description"])
-            self.baseSetting_DatapackNameInput.setText(datapackDir.split("/")[-1])
-            self.baseSetting_DatapackVersionSelected.setCurrentIndex(int(result["pack"]["pack_format"])-3)
+        # if datapackDir == "None" and datapackDir:
+        #     QMessageBox.critical(None,"错误", "您没有选择数据包目录，请选择数据包目录！")
+        #     self.newDatapackFunc()
+        #     if os.path.exists(datapackDir+"/data/") == False:
+        #         os.mkdir(datapackDir+"/data/")
+        #     if os.path.exists(datapackDir+'/pack.mcmeta'):
+        #         with open(datapackDir+"/pack.mcmeta","w",encoding="utf-8") as f:
+        #             packMcmeta={
+        #             "pack":{
+        #                 "pack_format":12,
+        #                 "description":"数据包简介\ncreate by DatapackGenerator"
+        #             }
+        #         }
+        #             f.write(json.dumps(packMcmeta,ensure_ascii=False))
+        #         if len(os.listdir(datapackDir+"/data/")) == 0:
+        #             os.mkdir(datapackDir+"/data/"+easygui.enterbox("输入命名空间名称",title="新建命名空间"))
+        #     with open(datapackDir+"/pack.mcmeta","r",encoding="utf-8") as f:
+        #         resultstr=f.read()
+        #     result=json.loads(resultstr)
+        #     print(result)
+        #     self.baseSetting_DatapackDescriptionInput.setText(result["pack"]["description"])
+        #     self.baseSetting_DatapackNameInput.setText(datapackDir.split("/")[-1])
+        #     self.baseSetting_DatapackVersionSelected.setCurrentIndex(int(result["pack"]["pack_format"])-3)
         namespace=os.listdir(datapackDir+"/data/")
         if len(namespace)>=2:
             self.datapack_namespace=easygui.choicebox("选择一个命名空间","多个命名空间",namespace)
@@ -375,9 +375,9 @@ class Ui_MainWindow(QMainWindow):
         self.recipes_ListView.setModel(list)
     def saveBaseSetting(self):
         global datapackDir,namespace,version,description
-        if datapackDir == "None" and datapackDir:
-            QMessageBox.critical(self, "错误", "您没有选择数据包目录，请选择数据包目录！")
-            self.newDatapackFunc()
+        # if datapackDir == "None" and datapackDir:
+        #     QMessageBox.critical(self, "错误", "您没有选择数据包目录，请选择数据包目录！")
+        #     self.newDatapackFunc()
         namespace=self.baseSetting_DatapackNameInput.text()
         version=self.baseSetting_DatapackVersionSelected.currentIndex()+3
         description=self.baseSetting_DatapackDescriptionInput.toPlainText()
@@ -410,6 +410,8 @@ class Ui_MainWindow(QMainWindow):
         if(datapackDir=="" or datapackDir==None):
             QMessageBox.warning(None,"未选择目录","您取消选择了数据包目录")
         print("get datapack dir succ ",datapackDir)
+        self.baseSetting.setEnabled(True)
+        self.recipes_Frame.setEnabled(True)
     def openDatapackFunc(self):
         global datapackDir
         datapackDir=QFileDialog.getExistingDirectory(caption="打开数据包",directory="./")
@@ -443,6 +445,8 @@ class Ui_MainWindow(QMainWindow):
             self.baseSetting_DatapackDescriptionInput.setText(result["pack"]["description"])
             self.baseSetting_DatapackNameInput.setText(datapackDir.split("/")[-1])
             self.baseSetting_DatapackVersionSelected.setCurrentIndex(int(result["pack"]["pack_format"])-3)
+        self.baseSetting.setEnabled(True)
+        self.recipes_Frame.setEnabled(True)
         #print(self.baseSetting_DatapackVersionSelected.currentText(),self.baseSetting_DatapackVersionSelected.currentIndex())
     def linkFormatCode(self):
         webbrowser.open("https://minecraft.fandom.com/zh/wiki/%E6%A0%BC%E5%BC%8F%E5%8C%96%E4%BB%A3%E7%A0%81", new=0, autoraise=True)
@@ -498,6 +502,9 @@ class Ui_MainWindow(QMainWindow):
         self.recipes_ListView.clicked.connect(self.recipes_ListViewClicked)
         self.recipes_save.clicked.connect(self.recipes_crafting_gen)
 
+        #初始化
+        self.baseSetting.setEnabled(False)
+        self.recipes_Frame.setEnabled(False)
         #主题
         self.title.setProperty('class','title')
 
