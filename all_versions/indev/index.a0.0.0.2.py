@@ -209,6 +209,8 @@ class Ui_MainWindow(QMainWindow):
         self.menubar.setObjectName("menubar")
         self.menu = QtWidgets.QMenu(self.menubar)
         self.menu.setObjectName("menu")
+        # self.setting_menu=QtWidgets.QMenu(self.menubar)
+        # self.setting_menu.setObjectName("setting_menu")
         self.menu_2 = QtWidgets.QMenu(self.menubar)
         self.menu_2.setObjectName("menu_2")
         self.menu_3 = QtWidgets.QMenu(self.menu_2)
@@ -221,14 +223,18 @@ class Ui_MainWindow(QMainWindow):
         self.newDatapack.setObjectName("action")
         self.openDatapack = QtWidgets.QAction(MainWindow)
         self.openDatapack.setObjectName("newDatapack")
+        # self.openSettingWinAction=QtWidgets.QAction(MainWindow)
+        # self.openSettingWinAction.setObjectName("openSettingWinAction")
         self.shaped_crafting = QtWidgets.QAction(MainWindow)
         self.shaped_crafting.setObjectName("shaped_crafting")
         self.menu.addAction(self.newDatapack)
         self.menu.addAction(self.openDatapack)
+        # self.setting_menu.addAction(self.openSettingWinAction)
         self.menu_3.addAction(self.shaped_crafting)
         self.menu_2.addAction(self.menu_3.menuAction())
         self.menubar.addAction(self.menu.menuAction())
         self.menubar.addAction(self.menu_2.menuAction())
+        # self.menubar.addAction(self.setting_menu.menuAction())
         self.retranslateUi(MainWindow)
         self.recipes_TypeSelected.setCurrentIndex(0)
         QtCore.QMetaObject.connectSlotsByName(MainWindow)
@@ -237,6 +243,7 @@ class Ui_MainWindow(QMainWindow):
         MainWindow.setTabOrder(self.baseSetting_DatapackDescriptionInput, self.baseSetting_SaveButton)
         MainWindow.setTabOrder(self.baseSetting_SaveButton, self.baseSetting_FormatCodeWikiLinkButton)
         self.datapack_namespace=""
+        self.shapless_ItemList=[]
     def recipes_crafting_gen(self):
         #print(self.recipes_TypeSelected.currentIndex(),'currentIndex:TypeSelected')
         if self.recipes_TypeSelected.currentIndex() == 0:
@@ -298,7 +305,12 @@ class Ui_MainWindow(QMainWindow):
                 self.datapack_namespace=namespace=namespace[0]
             with open(datapackDir+"/data/"+namespace+"/recipes/"+self.recipes_fileNameInput.text()+".json",mode="w",encoding="utf-8") as f:
                 f.write(json.dumps(result))
-
+        elif self.recipes_TypeSelected.currentIndex() == 1:
+            pass
+    def recipes_crafting_shapless_addItem(self):
+        self.shapless_ItemList.append(self.crafting_shapless_InputID.text())
+        list=QtCore.QStringListModel(self.shapless_ItemList)
+        self.crafting_shapless_InList.setModel(list)
     def recipes_ListViewClicked(self,index):
         global datapackDir,listItem
         tabDict={
@@ -412,6 +424,8 @@ class Ui_MainWindow(QMainWindow):
         print("get datapack dir succ ",datapackDir)
         self.baseSetting.setEnabled(True)
         self.recipes_Frame.setEnabled(True)
+    def openSettingWindowFunc(self):
+        pass
     def openDatapackFunc(self):
         global datapackDir
         datapackDir=QFileDialog.getExistingDirectory(caption="打开数据包",directory="./")
@@ -493,6 +507,8 @@ class Ui_MainWindow(QMainWindow):
         self.newDatapack.setText(_translate("MainWindow", "新建数据包"))
         self.openDatapack.setText(_translate("MainWindow", "打开数据包"))
         self.shaped_crafting.setText(_translate("MainWindow", "有序合成"))
+        # self.openSettingWinAction.setText(_translate("MainWindow","设置"))
+        # self.setting_menu.setTitle(_translate("MainWindow","设置"))
         #功能链接
         self.baseSetting_FormatCodeWikiLinkButton.clicked.connect(self.linkFormatCode)
         self.newDatapack.triggered.connect(self.newDatapackFunc)
@@ -501,7 +517,8 @@ class Ui_MainWindow(QMainWindow):
         self.recipes_reflashList.clicked.connect(self.recipes_reflashListFunc)
         self.recipes_ListView.clicked.connect(self.recipes_ListViewClicked)
         self.recipes_save.clicked.connect(self.recipes_crafting_gen)
-
+        self.crafting_shapless_Additem_btn.clicked.connect(self.recipes_crafting_shapless_addItem)
+        # self.openSettingWinAction.triggered.connect(self.openSettingWindowFunc)
         #初始化
         self.baseSetting.setEnabled(False)
         self.recipes_Frame.setEnabled(False)
@@ -546,5 +563,5 @@ QComboBox{{
 }}
         '''
     app.setStyleSheet(stylesheet + custom_css.format(**os.environ))
-    MainWindow.show() # 执行QMainWindow的show()方法，显示这个QMainWindow 
+    MainWindow.show() # 执行QMainWindow的show()方法，显示这个QMainWindow
     sys.exit(app.exec_()) # 使用exit()或者点击关闭按钮退出QApplicat
