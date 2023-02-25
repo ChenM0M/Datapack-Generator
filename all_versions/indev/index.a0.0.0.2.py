@@ -165,7 +165,9 @@ class Ui_MainWindow(QMainWindow):
         self.crafting_shapless_InList.setObjectName("crafting_shapless_InList")
         self.crafting_shapless_Additem_btn = QtWidgets.QPushButton(self.crafting_shapless)
         self.crafting_shapless_Additem_btn.setGeometry(QtCore.QRect(150, 10, 75, 23))
-        self.crafting_shapless_Additem_btn.setObjectName("crafting_shapless_Additem_btn")
+        self.crafting_shapless_Delitem_btn = QtWidgets.QPushButton(self.crafting_shapless)
+        self.crafting_shapless_Delitem_btn.setGeometry(QtCore.QRect(225, 10, 50, 23))
+        self.crafting_shapless_Delitem_btn.setObjectName("crafting_shapless_Delitem_btn")
         self.crafting_shapless_InputID = QtWidgets.QLineEdit(self.crafting_shapless)
         self.crafting_shapless_InputID.setGeometry(QtCore.QRect(150, 60, 113, 20))
         self.crafting_shapless_InputID.setObjectName("crafting_shapless_InputID")
@@ -311,6 +313,11 @@ class Ui_MainWindow(QMainWindow):
         self.shapless_ItemList.append(self.crafting_shapless_InputID.text())
         list=QtCore.QStringListModel(self.shapless_ItemList)
         self.crafting_shapless_InList.setModel(list)
+    def recipes_crafting_shapless_DelItem(self):
+        #print(self.crafting_shapless_InList.currentIndex().row())
+        self.shapless_ItemList.pop(self.crafting_shapless_InList.currentIndex().row())
+        list=QtCore.QStringListModel(self.shapless_ItemList)
+        self.crafting_shapless_InList.setModel(list)
     def recipes_ListViewClicked(self,index):
         global datapackDir,listItem
         tabDict={
@@ -424,8 +431,6 @@ class Ui_MainWindow(QMainWindow):
         print("get datapack dir succ ",datapackDir)
         self.baseSetting.setEnabled(True)
         self.recipes_Frame.setEnabled(True)
-    def openSettingWindowFunc(self):
-        pass
     def openDatapackFunc(self):
         global datapackDir
         datapackDir=QFileDialog.getExistingDirectory(caption="打开数据包",directory="./")
@@ -507,6 +512,7 @@ class Ui_MainWindow(QMainWindow):
         self.newDatapack.setText(_translate("MainWindow", "新建数据包"))
         self.openDatapack.setText(_translate("MainWindow", "打开数据包"))
         self.shaped_crafting.setText(_translate("MainWindow", "有序合成"))
+        self.crafting_shapless_Delitem_btn.setText(_translate("MainWindow","删除"))
         # self.openSettingWinAction.setText(_translate("MainWindow","设置"))
         # self.setting_menu.setTitle(_translate("MainWindow","设置"))
         #功能链接
@@ -519,6 +525,7 @@ class Ui_MainWindow(QMainWindow):
         self.recipes_save.clicked.connect(self.recipes_crafting_gen)
         self.crafting_shapless_Additem_btn.clicked.connect(self.recipes_crafting_shapless_addItem)
         # self.openSettingWinAction.triggered.connect(self.openSettingWindowFunc)
+        self.crafting_shapless_Delitem_btn.clicked.connect(self.recipes_crafting_shapless_DelItem)
         #初始化
         self.baseSetting.setEnabled(False)
         self.recipes_Frame.setEnabled(False)
@@ -528,7 +535,8 @@ class Ui_MainWindow(QMainWindow):
 if __name__ == "__main__":
     datapackDir="None"
     QtCore.QCoreApplication.setAttribute(QtCore.Qt.AA_EnableHighDpiScaling)
-    app = QtWidgets.QApplication(sys.argv) # 创建一个QApplication，也就是你要开发的软件app 
+    app = QtWidgets.QApplication(sys.argv) # 创建一个QApplication，也就是你要开发的软件app
+    
     MainWindow = QtWidgets.QMainWindow() # 创建一个QMainWindow，用来装载你需要的各种组件、控件 
     ui = Ui_MainWindow() # ui是Ui_MainWindow()类的实例化对象 
     ui.setupUi(MainWindow)
@@ -562,6 +570,12 @@ QComboBox{{
     color: #fff;
 }}
         '''
+    #print(sys.argv)
+    if len(sys.argv)>=3 and (sys.argv[1] == "--custom-css" or sys.argv[1] == "-cc"):
+        with open(sys.argv[2],mode="r",encoding="utf-8") as f:
+            print("Load Custom CSS file")
+            css_result=f.read()
+        custom_css+=css_result
     app.setStyleSheet(stylesheet + custom_css.format(**os.environ))
     MainWindow.show() # 执行QMainWindow的show()方法，显示这个QMainWindow
     sys.exit(app.exec_()) # 使用exit()或者点击关闭按钮退出QApplicat
