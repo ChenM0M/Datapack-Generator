@@ -566,7 +566,6 @@ class Ui_MainWindow(QMainWindow):
 
 if __name__ == "__main__":
     try:
-        print("12"+3)
         datapackDir="None"
         QtCore.QCoreApplication.setAttribute(QtCore.Qt.AA_EnableHighDpiScaling)
         app = QtWidgets.QApplication(sys.argv) # 创建一个QApplication，也就是你要开发的软件app
