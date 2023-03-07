@@ -50,7 +50,7 @@ Or batch file.
 By Bi2Nb9O3 & ChenMoM
 
 
-## **DEBUGGING AREA **
+## Debug 捉虫
 
 这里是调试区，供用户、开发者、贡献者测试新版本
 
