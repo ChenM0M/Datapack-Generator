@@ -18,7 +18,7 @@ class Ui_MainWindow(QMainWindow):
         self.version="a0.0.0.2"
         self.visual_version="a0.0.0.2d Theme by Qt_Material Theme Name: dark_blue"
         MainWindow.setObjectName("MainWindow")
-        MainWindow.resize(900, 625)
+        MainWindow.resize(1000, 625)
         self.centralwidget = QtWidgets.QWidget(MainWindow)
         self.centralwidget.setObjectName("centralwidget")
         self.baseSetting = QtWidgets.QGroupBox(self.centralwidget)
@@ -98,7 +98,7 @@ class Ui_MainWindow(QMainWindow):
         self.vesion_info.setGeometry(QtCore.QRect(10, 530, 800, 16))
         self.vesion_info.setObjectName("vesion_info")
         self.recipes_Frame = QtWidgets.QGroupBox(self.centralwidget)
-        self.recipes_Frame.setGeometry(QtCore.QRect(370, 60, 500, 261))
+        self.recipes_Frame.setGeometry(QtCore.QRect(370, 60, 550, 261))
         self.recipes_Frame.setObjectName("recipes_Frame")
         self.recipes_ListView = QtWidgets.QListView(self.recipes_Frame)
         self.recipes_ListView.setGeometry(QtCore.QRect(20, 33, 161, 221))
@@ -155,7 +155,7 @@ class Ui_MainWindow(QMainWindow):
         self.recipes_crafting_shaped_OutNumberText.setGeometry(QtCore.QRect(160, 120, 71, 16))
         self.recipes_crafting_shaped_OutNumberText.setObjectName("recipes_crafting_shaped_OutNumberText")
         self.recipes_crafting_shaped_OutNumber = QtWidgets.QSpinBox(self.crafting_shaped)
-        self.recipes_crafting_shaped_OutNumber.setGeometry(QtCore.QRect(230, 120, 60, 22))
+        self.recipes_crafting_shaped_OutNumber.setGeometry(QtCore.QRect(230, 120, 80, 22))
         self.recipes_crafting_shaped_OutNumber.setObjectName("recipes_crafting_shaped_OutNumber")
         self.recipes_TypeSelected.addTab(self.crafting_shaped, "")
         self.crafting_shapless = QtWidgets.QWidget()
@@ -330,7 +330,7 @@ class Ui_MainWindow(QMainWindow):
                 f.write(json.dumps(result))
         self.recipes_reflashListFunc()
     def recipes_crafting_shapless_addItem(self):
-        if len(self.shapless_ItemList)<=9 and self.recipes_reflashListFunc.text()!="":
+        if len(self.shapless_ItemList)<=9 and self.crafting_shapless_InputID.text()!="":
             self.shapless_ItemList.append(self.crafting_shapless_InputID.text())
             list=QtCore.QStringListModel(self.shapless_ItemList)
             self.crafting_shapless_InList.setModel(list)
@@ -353,6 +353,9 @@ class Ui_MainWindow(QMainWindow):
         result=json.loads(resultst)
         recipeType=result["type"]
         recipeType=recipeType.split(":")[1]
+        if recipeType not in  tabDict.keys():
+            QMessageBox.warning(None,"未兼容的配方类型","你选择了一个还没写（好）的配方类型")
+            return
         self.recipes_TypeSelected.currentIndex=recipeType
         self.recipes_fileNameInput.setText(listItem[index.row()].split(".")[0])
         self.recipes_TypeSelected.setCurrentIndex(tabDict[recipeType])
@@ -454,6 +457,9 @@ class Ui_MainWindow(QMainWindow):
         print("get datapack dir succ ",datapackDir)
         self.baseSetting.setEnabled(True)
         self.recipes_Frame.setEnabled(True)
+        self.baseSetting_DatapackVersionSelected.setCurrentIndex(0)
+        self.baseSetting_DatapackDescriptionInput.setText("")
+        self.baseSetting_DatapackNameInput.setText("")
     def openDatapackFunc(self):
         global datapackDir
         datapackDir=QFileDialog.getExistingDirectory(caption="打开数据包",directory="./")
@@ -462,6 +468,8 @@ class Ui_MainWindow(QMainWindow):
             return
         elif os.path.exists(datapackDir+"/pack.mcmeta") == False:
             QMessageBox.critical(self, "错误", "您选择的目录不为数据包根目录，将新建数据包")
+        if os.path.exists(datapackDir+"/pack.mcmeta") and os.path.exists(datapackDir+"/data") == False:
+            os.mkdir(datapackDir+"/data")
         print("get datapack dir succ ",datapackDir)
         try:
             with open(datapackDir+"/pack.mcmeta","r",encoding="utf-8") as f:
@@ -557,49 +565,52 @@ class Ui_MainWindow(QMainWindow):
         self.title.setProperty('class','title')
 
 if __name__ == "__main__":
-    datapackDir="None"
-    QtCore.QCoreApplication.setAttribute(QtCore.Qt.AA_EnableHighDpiScaling)
-    app = QtWidgets.QApplication(sys.argv) # 创建一个QApplication，也就是你要开发的软件app
-    
-    MainWindow = QtWidgets.QMainWindow() # 创建一个QMainWindow，用来装载你需要的各种组件、控件 
-    ui = Ui_MainWindow() # ui是Ui_MainWindow()类的实例化对象 
-    ui.setupUi(MainWindow)
-    apply_stylesheet(app, theme='dark_blue.xml',invert_secondary=False) # 执行类中的setupUi方法，方法的参数是第二步中创建的QMainWindow 
-    #apply_stylesheet(app, theme='dark_blue.xml',extra={
-    #    'font-size':'20px'
-    #})
-    stylesheet = app.styleSheet()
-    custom_css='''
-.title{{
-    font-size: 30px;
-}}
+    try:
+        print("12"+3)
+        datapackDir="None"
+        QtCore.QCoreApplication.setAttribute(QtCore.Qt.AA_EnableHighDpiScaling)
+        app = QtWidgets.QApplication(sys.argv) # 创建一个QApplication，也就是你要开发的软件app
+        MainWindow = QtWidgets.QMainWindow() # 创建一个QMainWindow，用来装载你需要的各种组件、控件 
+        ui = Ui_MainWindow() # ui是Ui_MainWindow()类的实例化对象 
+        ui.setupUi(MainWindow)
+        apply_stylesheet(app, theme='dark_blue.xml',invert_secondary=False) # 执行类中的setupUi方法，方法的参数是第二步中创建的QMainWindow 
+        #apply_stylesheet(app, theme='dark_blue.xml',extra={
+        #    'font-size':'20px'
+        #})
+        stylesheet = app.styleSheet()
+        custom_css='''
+    .title{{
+        font-size: 30px;
+    }}
 
-QPushButton{{
-    font-size: 10px;
-}}
+    QPushButton{{
+        font-size: 10px;
+    }}
 
-QLabel{{
-    font-size: 12px;
-}}
+    QLabel{{
+        font-size: 12px;
+    }}
 
-QSpinBox{{
-    color: #fff;
-}}
+    QSpinBox{{
+        color: #fff;
+    }}
 
-*{{
-    font-family: "Microsoft YaHei";
-}}
+    *{{
+        font-family: "Microsoft YaHei";
+    }}
 
-QComboBox{{
-    color: #fff;
-}}
-        '''
-    #print(sys.argv)
-    if len(sys.argv)>=3 and (sys.argv[1] == "--custom-css" or sys.argv[1] == "-cc"):
-        with open(sys.argv[2],mode="r",encoding="utf-8") as f:
-            print("Load Custom CSS file")
-            css_result=f.read()
-        custom_css+=css_result
-    app.setStyleSheet(stylesheet + custom_css.format(**os.environ))
-    MainWindow.show() # 执行QMainWindow的show()方法，显示这个QMainWindow
-    sys.exit(app.exec_()) # 使用exit()或者点击关闭按钮退出QApplicat
+    QComboBox{{
+        color: #fff;
+    }}
+            '''
+        #print(sys.argv)
+        if len(sys.argv)>=3 and (sys.argv[1] == "--custom-css" or sys.argv[1] == "-cc"):
+            with open(sys.argv[2],mode="r",encoding="utf-8") as f:
+                print("Load Custom CSS file")
+                css_result=f.read()
+            custom_css+=css_result
+        app.setStyleSheet(stylesheet + custom_css.format(**os.environ))
+        MainWindow.show() # 执行QMainWindow的show()方法，显示这个QMainWindow
+        sys.exit(app.exec_()) # 使用exit()或者点击关闭按钮退出QApplicat
+    except Exception as error:
+        easygui.exceptionbox("Opssssssssssssssssssssssssss,there is someting wrong with th program","Ops!")
