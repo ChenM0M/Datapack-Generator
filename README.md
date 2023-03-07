@@ -49,3 +49,13 @@ Or batch file.
 ## 作者  Auther
 By Bi2Nb9O3 & ChenMoM
 
+
+## **DEBUGGING AREA **
+
+这里是调试区，供用户、开发者、贡献者测试新版本
+
+### 如何调试捉虫？
+ - 找到对应版本的程序文件（新版本已经将debug版本功能合并进入主版本）
+ - 运行程序，一顿操作找到bug
+ - 转到[github issue]("https://github.dev/CN-ice-create/Datapack-Generator/issues")
+ - 提交issue，格式见#6 issue
